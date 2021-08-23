@@ -1,0 +1,59 @@
+name: ecr_connector_image
+
+# Controls when the action will run. 
+on:
+#  Triggers the workflow only when a new release is out
+  release:
+  types: [published]
+
+# Triggers the workflow on push to dev branch or pull request events but only for the main branch.
+
+#   push:
+#     branches: [ dev ]
+
+# Triggers the workflow on pull request events but only for the main branch.
+
+  pull_request:
+    branches: [ main ]
+    types: [closed]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  connector-image:
+
+#     if: ${{ github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch' }}
+
+    if: ${{  github.event.pull_request.merged == true || github.event.release.published == true || github.event_name == 'workflow_dispatch' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@master
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+
+
+     - name: Set Tag Number On the Basis Of Published Releases
+       id: tag-number
+       run: echo ::set-output name=tag::$(echo ${GITHUB_REF#refs/tags/})
+      
+     - name: Check Tag Release
+       env:
+         RELEASE_VERSION: ${{ steps.tag-number.outputs.tag }}
+       run: |
+         echo $RELEASE_VERSION
+         echo ${{ steps.vars.outputs.tag }}
