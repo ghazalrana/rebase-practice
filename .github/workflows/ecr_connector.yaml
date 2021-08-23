@@ -47,6 +47,7 @@ jobs:
 
 
 
+
      - name: Set Tag Number On the Basis Of Published Releases
        id: tag-number
        run: echo ::set-output name=tag::$(echo ${GITHUB_REF#refs/tags/})
@@ -57,3 +58,5 @@ jobs:
        run: |
          echo $RELEASE_VERSION
          echo ${{ steps.vars.outputs.tag }}
+
+    
