@@ -26,7 +26,7 @@ jobs:
 
 #     if: ${{ github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch' }}
 
-    # if: ${{  github.event.pull_request.merged == true || github.event.release.published == true || github.event_name == 'workflow_dispatch' }}
+    if: ${{  github.event.pull_request.merged == true || github.event.release.published == true }}
 
     runs-on: ubuntu-latest
 
