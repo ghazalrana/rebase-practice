@@ -1,4 +1,4 @@
-name: ecr_connector_image
+name: image
 
 # Controls when the action will run. 
 on:
